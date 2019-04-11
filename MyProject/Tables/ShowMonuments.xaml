@@ -1,0 +1,136 @@
+﻿<Window x:Class="MyProject.Tables.ShowMonuments"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyProject.Tables"
+        xmlns:cmd="clr-namespace:MyProject.Commands"
+        xmlns:help="clr-namespace:MyProject.Help"
+        xmlns:src="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Display of the Monuments" Height="400" Width="670" MaxHeight="430" MaxWidth="750" WindowStartupLocation="CenterScreen" Closed="Window_Closed">
+    <Window.CommandBindings>
+        <CommandBinding Command="cmd:RoutedCommands.Cancel" CanExecute="Cancel_CanExecute" Executed="Cancel_Executed"></CommandBinding>
+        <CommandBinding Command="ApplicationCommands.Help" x:Name="helpCommand"/>
+    </Window.CommandBindings>
+    <Window.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <ContextMenu  x:Key="RowMenu" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+            <MenuItem Header="Edit" Click="Edit_Click"></MenuItem>
+            <MenuItem Header="Delete" Click="Delete_Click"></MenuItem>
+        </ContextMenu>
+        <Style x:Key="DefaultRowStyle" TargetType="{x:Type DataGridRow}">
+            <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+        </Style>
+    </Window.Resources>
+    <Grid Background="#70fffa" help:HelpProvider.HelpKey="helpTableMonument">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid Grid.Row="0" 
+                  Background="Turquoise" 
+                  x:Name="dgrMonuments"
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  IsSynchronizedWithCurrentItem="True"
+                  Margin="10 3"
+                  ScrollViewer.CanContentScroll="True"
+                  RowStyle="{StaticResource DefaultRowStyle}"
+                  MouseDoubleClick="DgrMonuments_MouseDoubleClick"
+                  ContextMenuOpening="DgrMonuments_ContextMenuOpening"
+                  PreviewKeyDown="DgrMonuments_PreviewKeyDown"
+                  SelectedCellsChanged="DgrMonuments_SelectedCellsChanged">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn x:Name="colIcon" Header="Icon" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Icon}" MaxHeight="32" MaxWidth="32"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="colID" Header="ID" Binding="{Binding ID}" />
+                <DataGridTextColumn x:Name="colName" Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn x:Name="colDesc" Header="Description" Binding="{Binding Description}" />
+                <DataGridTextColumn x:Name="colType" Header="Type" Binding="{Binding Type}" />
+                <DataGridTextColumn x:Name="colClimate" Header="Climate" Binding="{Binding Climate}" />
+                <DataGridTextColumn x:Name="colTouristStatus" Header="Tourist Status" Binding="{Binding TouristStatus}" />
+                <DataGridCheckBoxColumn x:Name="colEE" Header="EcologicallyEndangered" Binding="{Binding EcologicallyEndangered}">
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn x:Name="colPR" Header="PopulatedRegion" Binding="{Binding PopulatedRegion}">
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn x:Name="colHabitat" Header="Habitat" Binding="{Binding Habitat}" />
+                <DataGridTextColumn x:Name="colIncome" Header="Income" Binding="{Binding Income}" />
+                <DataGridTextColumn x:Name="colDiscoveryDate" Header="Discovery Date" Binding="{Binding DiscoveryDate, StringFormat=MM/dd/yyyy}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+            <Button Click="ExpandOrCollapse_Click" Style="{StaticResource buttonStyle}" Width="120" Margin="0 15" HorizontalAlignment="Left" Content="{Binding Path=TableBtnContent}"></Button>
+            <Button Click="Add_Click" Style="{StaticResource buttonStyle}" Margin="0 15" HorizontalAlignment="Left">Add</Button>
+            <Button Click="EditBtn_Click" Style="{StaticResource buttonStyle}" Margin="0 15" HorizontalAlignment="Left">Edit</Button>
+            <Button Grid.Row="1" Grid.Column="0" Click="Delete_Click" Style="{StaticResource buttonStyle}" Margin="0 15" HorizontalAlignment="Left">Delete</Button>
+        </StackPanel>
+        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource buttonStyle}" Command="cmd:RoutedCommands.Cancel" Margin="0 15" HorizontalAlignment="Right">OK</Button>
+        <StackPanel Grid.Row="0" Grid.Column="2">
+            <GroupBox Header="Tags" BorderBrush="DarkCyan" VerticalAlignment="Top" Margin="0 0 5 0">
+                <ListBox x:Name="tagsBox" BorderThickness="0" Background="#70fffa" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="80" ItemsSource="{Binding Tags, Mode=OneWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <BulletDecorator>
+                                <BulletDecorator.Bullet>
+                                    <Border BorderThickness="1" BorderBrush="Black">
+                                        <Rectangle Height="10" Width="10" Fill="{Binding ColorCode}" VerticalAlignment="Bottom" />
+                                    </Border>
+                                </BulletDecorator.Bullet>
+                                <TextBlock Text="{Binding ID}" FontSize="12" Margin="5 0 0 0"></TextBlock>
+                            </BulletDecorator>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+            <DockPanel Margin="0 5 5 0">
+                <TextBlock FontWeight="Bold" Margin="0 0 5 0" FontSize="13">Search:</TextBlock>
+                <Border BorderBrush="Black" BorderThickness="1">
+                    <DockPanel Background="White">
+                        <Image Source="/MyProject;component/search.png" MaxHeight="20"/>
+                        <TextBox x:Name="tbSearch" FontSize="12" HorizontalAlignment="Stretch" BorderThickness="0" TextChanged="TbSearch_TextChanged"/>
+                    </DockPanel>
+                </Border>
+            </DockPanel>
+            <StackPanel  Margin="0 0 5 0">
+                <TextBlock FontWeight="Bold" FontSize="13">Filter:</TextBlock>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Types:</TextBlock>
+                    <src:CheckComboBox Grid.Row="0" Grid.Column="1" x:Name="filterTypes" ItemsSource="{Binding Types}" Margin="0 2"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Tags:</TextBlock>
+                    <src:CheckComboBox Grid.Row="1" Grid.Column="1" x:Name="filterTags" ItemsSource="{Binding AllTags}" Margin="0 2"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Climates:</TextBlock>
+                    <src:CheckComboBox Grid.Row="2" Grid.Column="1" x:Name="filterClimates" ItemsSource="{Binding Climates}" Margin="0 2"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" ToolTip="Tourist status">Tur stat:</TextBlock>
+                    <src:CheckComboBox Grid.Row="3" Grid.Column="1" x:Name="filterTouristStatus" ItemsSource="{Binding TouristStatuses}" Margin="0 2" ToolTip="Tourist status"/>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button  BorderThickness="0" Background="DarkCyan" Margin="10 5" Padding="15 2" Click="Reset_Click">Reset</Button>
+                        <Button  BorderThickness="0" Background="DarkCyan" Margin="10 5" Padding="15 2" Click="Filter_Click">Filter</Button>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

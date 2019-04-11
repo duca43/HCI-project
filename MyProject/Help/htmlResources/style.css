@@ -1,0 +1,32 @@
+h2.help {
+	color: #b50a0a;
+	text-align: center;
+	background: #efa434;
+	padding: 10px;
+	border: 2px inset;
+}
+h3.help { 
+	color: #b50a0a;
+	font-style: italic;
+}
+h2.tutorial { 
+	color: #000e70;
+	text-align: center;
+}
+body {
+	background: #ffdead;
+}
+p { 
+	text-indent: 5%;
+		
+	text-align: justify;
+}
+image {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+td {
+    text-align: center;
+}

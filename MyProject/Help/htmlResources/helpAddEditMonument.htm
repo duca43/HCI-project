@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Add or edit monument</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+	    <h2 class="help">Add or edit monument</h2>
+	    <h4> Monument is described with: </h4>
+			<ol>
+				<li><b>ID</b> - Sequence of characters which is unique within all monuments. Maximum 16 characters.</li>
+				<li><b>Name</b> - Represents not unique name of the monument. Maximum 50 characters.</li>
+				<li><b>Description</b> - A brief description of the monument. Maximum 250 characters.</li>
+				<li><b>Type</b> - Monument type, one of the three entities that user can manipulate with.</li>
+				<li><b>Climate</b> - The climate in which monument is located.</li>
+				<li><b>Icon</b> - The icon used to visualize a monument. Image in PNG, JPG or JPEG format, choosed from user file system.</li>
+				<li><b>Ecologically Endangered</b> - Determines whether the monument is ecologically endangered.</li>
+				<li><b>Habitat</b> - Determines whether the monument is habitat of endangered species.</li>
+				<li><b>Populated region</b> - Determines whether the monument is located in populated region.</li>
+				<li><b>Tourist Status</b> - Determines the tourist availability of the monument. </li>
+				<li><b>Income</b> - Represents the total revenue from the monument.It is a real number.</li>
+				<li><b>Discovered Date</b> - The date when the monument was discovered.</li>
+			</ol>
+	    <p>
+		It is not necessary to enter all parameters mentioned above to add a new monument in application.
+		Required fields to fill are: <i>ID</i>, <i>Name</i> and <i>Income</i>. ID, name and description can contain any 
+		character supported by Unicode standard (UTF-16). Income is a real number and currency of income is a dollar.
+		Climate and tourist status can be choosed by using a combo box and type by using the editable combo box.
+		On the right side of description text field, there is button <a href="helpPickTags.htm">Choose tags.</a>.
+		Clicking on that button opens a dialog for tagging a monument. Monument can be tagged with no one, one or more tags.
+		Bellow the button for choosing tags there is an <i>Icon Preview</i> field. When the icon is choosed, it is displayed 
+		in the icon preview field. If icon is not set, it will be used the icon of the monument's type.
+	    </p>
+	</body>
+</html>

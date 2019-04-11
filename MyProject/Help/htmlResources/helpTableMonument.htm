@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Display of the monuments</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<h2 class="help">Display of the monuments</h2>
+		<p>
+			All monuments in application are displayed in the table. Each row represents one monument. There are
+			two modes of displaying data - <i>collapsed</i> or <i>expanded</i>. Mode can be switched with click on the
+			button in the lower left corner (See on the two images bellow the text). In collapsed mode is displayed
+			just the most important data: Icon, ID, Name and Type. In expanded mode is displayed all of the data about monuments.
+		</p>	
+		<p>	
+			Next to the Expand/Collapse button are there more buttons: <i>Add</i>, <i>Edit</i> and <i>Delete</i>. Add button
+			opens a dialog for adding a new monument. Edit button opens a dialog for editing a monument which is <i>selected in table</i>.
+			Opening a monument edit dialog can also be performed by left double-click on it in the table.
+			Delete button performs delete of the monument which is <i>selected in table</i>. It can also be performed by pressing Delete button
+			on the keyboard. If there are selected more than one monument, all of them will be deleted. Before deleting a monument user
+			is asked is he sure he wants to delete the monument(s). Other way that edit or delete can be performed 
+			is by opening <i>context menu</i> with the right click on the monument in the table.
+		</p>
+		<p>
+			In the upper right corner there is a list of tags to which the currently selected monument is tagged. Bellow the list is
+			a text field <i>Search</i>. It can be used to search for the one or more monuments by their <b>ID</b>. Bellow the search text field
+			is placed <i>Filter data</i> section. Data displayed in the table can be filtered by 4 different parameters: <i>type</i>, <i>tags</i>,
+			<i>climates</i> and <i>tourist status</i>. For each parameter it can be selected none, one or more values. If there is no selected value
+			for some parameter, monuments with all values of that parameter will be displayed by default. After selecting by which values to filter
+			the data, click on the <i>Filter</i> button. Selected values can be reset by clicking on the <i>Reset</i> button.
+		</p>
+		<image src="collapsedTable.png" width="525" height="300"/>
+		<p style="text-align:center;color:red;font-style=oblique;">Collpsed table display</p>
+		
+		<image src="expandedTable.png" width="525" height="300"/>
+		<p style="text-align:center;color:red;font-style=oblique;">Expanded table display</p>
+	</body>
+</html>

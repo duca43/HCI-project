@@ -1,0 +1,221 @@
+﻿<Window x:Class="MyProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyProject"
+        xmlns:cmd="clr-namespace:MyProject.Commands"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:ent="clr-namespace:MyProject.Entities"
+        xmlns:src="clr-namespace:MyProject.Other"
+        xmlns:help="clr-namespace:MyProject.Help"
+        Title="World Natural Monuments" Width="750" Height="430" MaxWidth="750" MaxHeight="430" WindowStartupLocation="CenterScreen" MinHeight="300" MinWidth="400">
+    <Window.CommandBindings>
+        <CommandBinding Command="cmd:RoutedCommands.MonumentType" CanExecute="MonumentType_CanExecute" Executed="MonumentType_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.Monument" CanExecute="Monument_CanExecute" Executed="Monument_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.Tag" CanExecute="Tag_CanExecute" Executed="Tag_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.Exit" CanExecute="Exit_CanExecute" Executed="Exit_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.ShowMonuments" CanExecute="ShowMonuments_CanExecute" Executed="ShowMonuments_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.ShowMonumentTypes" CanExecute="ShowMonumentTypes_CanExecute" Executed="ShowMonumentTypes_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.ShowTags" CanExecute="ShowTags_CanExecute" Executed="ShowTags_Executed"/>
+        <CommandBinding Command="ApplicationCommands.Help" Executed="Help_Executed" x:Name="helpCommand"/>
+        <CommandBinding Command="cmd:RoutedCommands.RemoveAllMonumentsFromMap" CanExecute="RemoveAllMonumentsFromMap_CanExecute" Executed="RemoveAllMonumentsFromMap_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.Tutorial" CanExecute="Tutorial_CanExecute" Executed="Tutorial_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.EditMonument" CanExecute="EditMonument_CanExecute" Executed="EditMonument_Executed"/>
+        <CommandBinding Command="cmd:RoutedCommands.DeleteMonument" CanExecute="DeleteMonument_CanExecute" Executed="DeleteMonument_Executed"/>
+    </Window.CommandBindings>
+    <Window.Resources>
+        <src:Ticker x:Key="ticker"/>
+        <Style TargetType="Menu">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Background" Value="Turquoise" />
+        </Style>
+        <Style x:Key="treeIcon" TargetType="Image">
+            <Setter Property="MaxWidth" Value="32"/>
+            <Setter Property="MaxHeight" Value="32"/>
+            <Setter Property="Margin" Value="0 0 5 0"/>
+        </Style>
+        <Style x:Key="glowingStyle" TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.3" ScaleY="1.3" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <ContextMenu x:Key="ListItemMenu" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+            <MenuItem Header="Edit" Command="cmd:RoutedCommands.EditMonument"></MenuItem>
+            <MenuItem Header="Delete" Command="cmd:RoutedCommands.DeleteMonument"></MenuItem>
+        </ContextMenu>
+        <Style x:Key="DefaultListItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="ContextMenu" Value="{StaticResource ListItemMenu}" />
+        </Style>
+    </Window.Resources>
+    <Grid help:HelpProvider.HelpKey="helpMainPage">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="4*" />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <MenuItem Header="_File" IsEnabled="{Binding Path=TutorialMode}">
+                <MenuItem Header="_New">
+                    <MenuItem Header="_Monument Type"  Command="cmd:RoutedCommands.MonumentType"/>
+                    <MenuItem Header="_Monument"  Command="cmd:RoutedCommands.Monument"/>
+                    <MenuItem Header="_Tag"  Command="cmd:RoutedCommands.Tag"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="_Exit" Command="cmd:RoutedCommands.Exit"/>
+            </MenuItem>
+            <MenuItem Header="_Edit" IsEnabled="{Binding Path=TutorialMode}">
+                <MenuItem Header="_Edit Monument" Command="cmd:RoutedCommands.EditMonument"></MenuItem>
+                <MenuItem Header="_Delete Monument" Command="cmd:RoutedCommands.DeleteMonument"></MenuItem>
+                <MenuItem Header="_Remove All Monuments" IsEnabled="{Binding Path=TutorialMode}" Command="cmd:RoutedCommands.RemoveAllMonumentsFromMap"/>
+            </MenuItem>
+            <MenuItem Header="_Display" IsEnabled="{Binding Path=TutorialMode}">
+                <MenuItem Header="_Monument Types" Command="cmd:RoutedCommands.ShowMonumentTypes"/>
+                <MenuItem Header="_Monuments" Command="cmd:RoutedCommands.ShowMonuments" x:Name="addMonument"/>
+                <MenuItem Header="_Tags" Command="cmd:RoutedCommands.ShowTags"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Tutorial" x:Name="tutorialItem" IsCheckable="True" Command="cmd:RoutedCommands.Tutorial"/>
+                <MenuItem Header="_Online Help" Command="ApplicationCommands.Help"/>
+            </MenuItem>
+        </Menu>
+        <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="Turquoise">
+            <Button x:Name="addMonumentTypeToolBar" ToolTip="Create new Monument type" Command="cmd:RoutedCommands.MonumentType" >
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.3" ScaleY="1.3" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding TutorialMode}" Value="False">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             From="1"
+                                                             To="0"
+                                                             RepeatBehavior="8x"
+                                                             AutoReverse="True"
+                                                             Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Image Source="/MyProject;component/newType.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Button ToolTip="Create new Monument" Command="cmd:RoutedCommands.Monument" IsEnabled="{Binding Path=TutorialMode}" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/newMonument.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Button ToolTip="Create new Tag" Command="cmd:RoutedCommands.Tag" IsEnabled="{Binding Path=TutorialMode}" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/tag_icon.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Separator/>
+            <Button ToolTip="Display the table with Monument types" Command="cmd:RoutedCommands.ShowMonumentTypes" IsEnabled="{Binding Path=TutorialMode}" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/tableType.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Button ToolTip="Display the table with Monuments" Command="cmd:RoutedCommands.ShowMonuments" IsEnabled="{Binding Path=TutorialMode}" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/tableMonument.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Button ToolTip="Display the table with Tags" Command="cmd:RoutedCommands.ShowTags" IsEnabled="{Binding Path=TutorialMode}" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/tableTag.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Separator/>
+            <Button ToolTip="Remove all monuments from map"  IsEnabled="{Binding Path=TutorialMode}" Command="cmd:RoutedCommands.RemoveAllMonumentsFromMap" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/delete.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Separator/>
+            <Button ToolTip="Tutorial" Command="cmd:RoutedCommands.Tutorial" Style="{StaticResource glowingStyle}">
+                <Image Source="/MyProject;component/tutorialIcon.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+            <Button Command="ApplicationCommands.Help" Style="{StaticResource glowingStyle}">
+                <Button.ToolTip>
+                    <StackPanel>
+                        <TextBlock>Online Help is used to make using of the application easier for user.</TextBlock>
+                        <TextBlock>You can call for this kind of help in many contents.</TextBlock>
+                    </StackPanel>
+                </Button.ToolTip>
+                <Image Source="/MyProject;component/helpIcon.png" MaxHeight="20" MaxWidth="20"/>
+            </Button>
+        </ToolBar>
+        <ListView x:Name="MonumentsView" Grid.Row="2" Grid.Column="0" Background="#00ced1" ItemsSource="{Binding Monuments}" BorderThickness="2"
+                  PreviewMouseLeftButtonDown="MonumentsTreeView_PreviewMouseLeftButtonDown"
+                  MouseMove="MonumentsTreeView_MouseMove"
+                  help:HelpProvider.HelpKey="helpMainPageList"
+                  ItemContainerStyle="{StaticResource DefaultListItemStyle}"
+                  MouseDoubleClick="MonumentsView_MouseDoubleClick"
+                  ContextMenuOpening="MonumentsView_ContextMenuOpening"
+                  GiveFeedback="MonumentsView_GiveFeedback">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.ToolTip>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock xml:space="preserve">ID:        </TextBlock>
+                                    <TextBlock Text="{Binding Path=ID}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock xml:space="preserve">Name:  </TextBlock>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock xml:space="preserve">Type:    </TextBlock>
+                                    <TextBlock Text="{Binding Type}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel.ToolTip>
+                        <Image Source="{Binding ImagePreview}" Style="{StaticResource treeIcon}"/>
+                        <TextBlock Text="{Binding ID}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ScrollViewer x:Name="scrollViewer" Grid.Row="2" Grid.Column="2" 
+                      HorizontalScrollBarVisibility="Visible" 
+                      VerticalScrollBarVisibility="Visible" 
+                      IsEnabled="{Binding Path=TutorialMode}"
+                      help:HelpProvider.HelpKey="helpMainPageMap">
+            <Canvas Grid.Row="2" Grid.Column="2" x:Name="mapCanvas" GiveFeedback="MonumentsView_GiveFeedback">
+                <Canvas.RenderTransform>
+                    <ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
+                </Canvas.RenderTransform>
+                <Image Canvas.Left="0" Canvas.Top="0" x:Name="Map" Source="/MyProject;component/mapimg.gif" Stretch="Fill" AllowDrop="True" DragEnter="Map_DragEnter" Margin="0 0 5 0" Drop="Map_Drop" Width="613" Height="301"/>
+            </Canvas>
+        </ScrollViewer>
+        <StatusBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalContentAlignment="Center" Background="Turquoise" IsEnabled="{Binding Path=TutorialMode}" help:HelpProvider.HelpKey="helpMainPageStatusbar">
+            <StatusBarItem  Width="350" HorizontalContentAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0 0 10 0">Zoom map:</TextBlock>
+                    <Slider x:Name="ZoomSlider" Width="150" Orientation="Horizontal" Grid.Row="1" Minimum="1.0" Maximum="2.0" LargeChange="0.2" SmallChange="0.01" Value="1.0"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0 0 10 0">Time and date:</TextBlock>
+                    <TextBlock Margin="0 0 20 0" Text="{Binding Source={StaticResource ticker}, Path=Now, StringFormat= dddd MM/dd/yyyy HH:mm:ss}"/>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
